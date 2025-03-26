@@ -1,0 +1,18 @@
+requests
+streamlit
+boto3
+openai
+geopy
+matplotlib
+plotly
+beautifulsoup4
+open-interpreter
+an_common @ git+ssh://git@bitbucket.org/ALPD/an_common.git@v3.0.4#egg=an_common
+langchain
+openai>=1.2
+duckduckgo-search
+anthropic>=0.3.0
+trubrics>=1.4.3
+streamlit-feedback
+nbformat
+ragatouille

@@ -1,0 +1,2018 @@
+agent,query,answer,functions
+RawDataRetrieverAgent,What was the water consumption this month?,"## What was the water consumption this month?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_daily_water_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'  # You may need to adjust this based on the available buildings
+
+# Calculate the date range for the current month
+today = datetime.now()
+first_day_of_month = today.replace(day=1)
+start_date = first_day_of_month.strftime('%Y-%m-%d')
+end_date = today.strftime('%Y-%m-%d')
+
+# Retrieve water consumption data
+df_consumption = get_daily_water_consumption(company, building, start_date, end_date)
+
+if df_consumption is not None and not df_consumption.empty:
+    # Calculate total consumption
+    total_consumption = df_consumption.sum().sum()
+    
+    # Print results
+    print(f""Water Consumption for {building} from {start_date} to {end_date}:"")
+    print(f""Total: {total_consumption:.2f} gallons"")
+    print(""\nDaily breakdown:"")
+    print(df_consumption)
+
+    # Save data to CSV
+    csv_filename = f""{building}_water_consumption_{start_date}_to_{end_date}.csv""
+    df_consumption.to_csv(csv_filename)
+    print(f""\nData saved to: {csv_filename}"")
+
+    # Create bar plot
+    plt.figure(figsize=(12, 6))
+    df_consumption.plot(kind='bar')
+    plt.title(f""Daily Water Consumption for {building}\n{start_date} to {end_date}"")
+    plt.xlabel(""Date"")
+    plt.ylabel(""Consumption (gallons)"")
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+
+    # Save figure
+    fig_filename = f""{building}_water_consumption_{start_date}_to_{end_date}.png""
+    plt.savefig(fig_filename)
+    print(f""Bar plot saved as: {fig_filename}"")
+
+    plt.show()
+
+else:
+    print(f""No water consumption data available for {building} from {start_date} to {end_date}"")
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_daily_water_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'  # You may need to adjust this based on the available buildings
+
+# Calculate the date range for the current month
+today = datetime.now()
+first_day_of_month = today.replace(day=1)
+start_date = first_day_of_month.strftime('%Y-%m-%d')
+end_date = today.strftime('%Y-%m-%d')
+
+# Retrieve water consumption data
+df_consumption = get_daily_water_consumption(company, building, start_date, end_date)
+
+if df_consumption is not None and not df_consumption.empty:
+    # Calculate total consumption
+    total_consumption = df_consumption.sum().sum()
+    
+    # Print results
+    print(f""Water Consumption for {building} from {start_date} to {end_date}:"")
+    print(f""Total: {total_consumption:.2f} gallons"")
+    print(""\nDaily breakdown:"")
+    print(df_consumption)
+
+    # Save data to CSV
+    csv_filename = f""{building}_water_consumption_{start_date}_to_{end_date}.csv""
+    df_consumption.to_csv(csv_filename)
+    print(f""\nData saved to: {csv_filename}"")
+
+    # Create bar plot
+    plt.figure(figsize=(12, 6))
+    df_consumption.plot(kind='bar')
+    plt.title(f""Daily Water Consumption for {building}\n{start_date} to {end_date}"")
+    plt.xlabel(""Date"")
+    plt.ylabel(""Consumption (gallons)"")
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+
+    # Save figure
+    fig_filename = f""{building}_water_consumption_{start_date}_to_{end_date}.png""
+    plt.savefig(fig_filename)
+    print(f""Bar plot saved as: {fig_filename}"")
+
+    plt.show()
+
+else:
+    print(f""No water consumption data available for {building} from {start_date} to {end_date}"")",
+RawDataRetrieverAgent,What is my energy consumption last month this year? What is my energy consumption last month of last year for 845 3rd ave?,"## What is my energy consumption last month this year and last month of last year for 845 3rd ave?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_daily_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+def save_data_to_csv(df, filename):
+    df.to_csv(filename)
+    print(f""Data saved to: {filename}"")
+
+def create_plot(df, title, filename, ylabel):
+    plt.figure(figsize=(12, 6))
+    
+    # Get the number of days in the data
+    num_days = len(df)
+    
+    # Create x-axis values for the bars
+    x = np.arange(num_days)
+    
+    # Plot bars for both years side by side
+    width = 0.35
+    plt.bar(x - width/2, df[df.columns[0]], width, label=df.columns[0])
+    plt.bar(x + width/2, df[df.columns[1]], width, label=df.columns[1])
+    
+    plt.title(title)
+    plt.xlabel(""Date"")
+    plt.ylabel(ylabel)
+    plt.grid(True)
+    
+    # Set x-axis ticks and labels
+    plt.xticks(x, df.index, rotation=45, ha='right')
+    
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(filename)
+    plt.show()
+    print(f""Bar plot saved as: {filename}"")
+
+# Set company and building
+company = ""rudin""
+building = ""845_third""
+resources = [(""electric_consumption"", ""kWh""), (""steam_consumption"", ""Mlb""), (""gas_consumption"", ""therms"")]
+
+# Get current month and year
+now = datetime.now()
+current_year = now.year
+current_month = now.month
+
+# Calculate start and end dates for last month this year
+start_date_current = (datetime(current_year, current_month, 1) - timedelta(days=1)).replace(day=1).strftime(""%Y-%m-%d"")
+end_date_current = (datetime(current_year, current_month, 1) - timedelta(days=1)).strftime(""%Y-%m-%d"")
+
+# Calculate start and end dates for last month last year
+start_date_last_year = (datetime(current_year - 1, current_month, 1) - timedelta(days=1)).replace(day=1).strftime(""%Y-%m-%d"")
+end_date_last_year = (datetime(current_year - 1, current_month, 1) - timedelta(days=1)).strftime(""%Y-%m-%d"")
+
+for resource, unit in resources:
+    print(f""\nProcessing {resource.replace('_', ' ')}:"")
+    
+    # Get data for last month this year
+    df_current = get_daily_energy_consumption(company, building, resource, start_date_current, end_date_current)
+    
+    # Get data for last month last year
+    df_last_year = get_daily_energy_consumption(company, building, resource, start_date_last_year, end_date_last_year)
+    
+    if df_current is not None and df_last_year is not None:
+        # Calculate total consumption
+        total_current = df_current.sum().sum()
+        total_last_year = df_last_year.sum().sum()
+        
+        df_current.index = df_current.index.strftime('%m-%d')
+        df_last_year.index = df_last_year.index.strftime('%m-%d')
+
+        # Combine data into one DataFrame
+        df_combined = pd.concat([df_current, df_last_year], axis=1)
+        df_combined.columns = [f'{current_year}', f'{current_year - 1}']
+        
+        # Save data to CSV
+        csv_filename = f""{company}_{building}_{resource}_comparison_last_month_{current_year}.csv""
+        save_data_to_csv(df_combined, csv_filename)
+        
+        # Create and save bar plot
+        bar_plot_filename = f""{company}_{building}_{resource}_comparison_last_month_{current_year}.png""
+        create_plot(df_combined, f""Daily {resource.replace('_', ' ').title()} Comparison for {building}"", bar_plot_filename, f""Consumption ({unit})"")
+        
+        # Print results
+        print(f""\nTotal {resource.replace('_', ' ')} for {building} in last month of {current_year}: {total_current:.2f} {unit}"")
+        print(f""Total {resource.replace('_', ' ')} for {building} in last month of {current_year - 1}: {total_last_year:.2f} {unit}"")
+        print(f""\nPercentage change: {((total_current - total_last_year) / total_last_year * 100):.2f}%"")
+        print(""\nDaily breakdown:"")
+        print(df_combined)
+    else:
+        print(f""No {resource.replace('_', ' ')} data available for comparison"")",
+RawDataRetrieverAgent,What is my energy consumption this month this year? What is my energy consumption this month of last year?,"## What is my energy consumption this month this year and this month of last year for 845 3rd ave?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_daily_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+def save_data_to_csv(df, filename):
+    df.to_csv(filename)
+    print(f""Data saved to: {filename}"")
+
+def create_plot(df, title, filename, ylabel):
+    plt.figure(figsize=(12, 6))
+    
+    # Get the number of days in the data
+    num_days = len(df)
+    
+    # Create x-axis values for the bars
+    x = np.arange(num_days)
+    
+    # Plot bars for both years side by side
+    width = 0.35
+    plt.bar(x - width/2, df[df.columns[0]], width, label=df.columns[0])
+    plt.bar(x + width/2, df[df.columns[1]], width, label=df.columns[1])
+    
+    plt.title(title)
+    plt.xlabel(""Date"")
+    plt.ylabel(ylabel)
+    plt.grid(True)
+    
+    # Set x-axis ticks and labels
+    plt.xticks(x, df.index, rotation=45, ha='right')
+    
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(filename)
+    plt.show()
+    print(f""Bar plot saved as: {filename}"")
+
+# Set company and building
+company = ""rudin""
+building = ""845_third""
+resources = [(""electric_consumption"", ""kWh""), (""steam_consumption"", ""Mlb""), (""gas_consumption"", ""therms"")]
+
+# Get current month and year
+now = datetime.now()
+current_year = now.year
+current_month = now.month
+
+# Calculate start and end dates for this month this year
+start_date_current = datetime(current_year, current_month, 1).strftime(""%Y-%m-%d"")
+end_date_current = now.strftime(""%Y-%m-%d"")
+
+# Calculate start and end dates for this month last year
+start_date_last_year = datetime(current_year - 1, current_month, 1).strftime(""%Y-%m-%d"")
+end_date_last_year = (datetime(current_year - 1, current_month + 1, 1) - timedelta(days=1)).strftime(""%Y-%m-%d"")
+
+for resource, unit in resources:
+    print(f""\nProcessing {resource.replace('_', ' ')}:"")
+    
+    # Get data for this month this year
+    df_current = get_daily_energy_consumption(company, building, resource, start_date_current, end_date_current)
+    
+    # Get data for this month last year
+    df_last_year = get_daily_energy_consumption(company, building, resource, start_date_last_year, end_date_last_year)
+    
+    if df_current is not None and df_last_year is not None:
+        # Calculate total consumption
+        total_current = df_current.sum().sum()
+        total_last_year = df_last_year.sum().sum()
+        
+        df_current.index = df_current.index.strftime('%m-%d')
+        df_last_year.index = df_last_year.index.strftime('%m-%d')
+
+        # Combine data into one DataFrame
+        df_combined = pd.concat([df_current, df_last_year], axis=1)
+        df_combined.columns = [f'{current_year}', f'{current_year - 1}']
+        
+        # Save data to CSV
+        csv_filename = f""{company}_{building}_{resource}_comparison_this_month_{current_year}.csv""
+        save_data_to_csv(df_combined, csv_filename)
+        
+        # Create and save bar plot
+        bar_plot_filename = f""{company}_{building}_{resource}_comparison_this_month_{current_year}.png""
+        create_plot(df_combined, f""Daily {resource.replace('_', ' ').title()} Comparison for {building}"", bar_plot_filename, f""Consumption ({unit})"")
+        
+        # Print results
+        print(f""\nTotal {resource.replace('_', ' ')} for {building} in this month of {current_year}: {total_current:.2f} {unit}"")
+        print(f""Total {resource.replace('_', ' ')} for {building} in this month of {current_year - 1}: {total_last_year:.2f} {unit}"")
+        print(f""\nPercentage change: {((total_current - total_last_year) / total_last_year * 100):.2f}%"")
+        print(""\nDaily breakdown:"")
+        print(df_combined)
+    else:
+        print(f""No {resource.replace('_', ' ')} data available for comparison"")",
+RawDataRetrieverAgent,What was my monthly peak demand over the last 12 months?,"## What was my monthly peak demand over the last 12 months?
+from datetime import datetime, timedelta
+import pandas as pd
+import matplotlib.pyplot as plt
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import calc_daily_peak_demand
+
+def get_monthly_peak_demand(company, building, start_date, end_date):
+    try:
+        df = calc_daily_peak_demand(company, building, start_date, end_date)
+        return df
+    except Exception as e:
+        print(f""Error retrieving data from {start_date} to {end_date}: {str(e)}"")
+        return None
+
+company = 'rudin'
+building = '345_Park'
+
+# Calculate date range for the last 12 months
+end_date = datetime.now().replace(day=1) - timedelta(days=1)  # Last day of previous month
+start_date = end_date - timedelta(days=365)  # 12 months ago
+
+# Convert dates to strings
+start_date_str = start_date.strftime('%Y-%m-%d')
+end_date_str = end_date.strftime('%Y-%m-%d')
+
+# Get monthly peak demand data
+monthly_peak_demand = get_monthly_peak_demand(company, building, start_date_str, end_date_str)
+
+if monthly_peak_demand is not None and not monthly_peak_demand.empty:
+    # Get the max of all days within each month and rename the index to year and month
+    monthly_peak_demand = monthly_peak_demand.resample('M').max()
+    monthly_peak_demand.index = monthly_peak_demand.index.strftime('%Y-%m')
+    
+    # Save data to CSV
+    csv_filename = f'{company}_{building}_monthly_peak_demand.csv'
+    monthly_peak_demand.to_csv(csv_filename)
+    print(f""Data saved to {csv_filename}"")
+
+    # Plotting
+    plt.figure(figsize=(12, 6))
+    plt.plot(monthly_peak_demand.index, monthly_peak_demand['peak_demand'], marker='o')
+    plt.title(f'Monthly Peak Electric Demand for {building} (Last 12 Months)')
+    plt.xlabel('Month')
+    plt.ylabel('Peak Demand (kW)')
+    plt.grid(True)
+    
+    # Rotate x-axis labels for better readability
+    plt.xticks(rotation=45)
+    
+    # Add value labels on the plot
+    for i, v in enumerate(monthly_peak_demand['peak_demand']):
+        plt.text(i, v, f'{v:.0f}', ha='center', va='bottom')
+
+    plt.tight_layout()
+    plot_filename = f'{company}_{building}_monthly_peak_demand.png'
+    plt.savefig(plot_filename)
+    
+    print(f""Plot saved as {plot_filename}"")
+
+    # Print the monthly peak demand values
+    print(""\nMonthly Peak Demand (kW):"")
+    print(monthly_peak_demand)
+    
+    # Find the highest peak demand
+    highest_peak = monthly_peak_demand['peak_demand'].max()
+    highest_peak_month = monthly_peak_demand['peak_demand'].idxmax()
+    print(f""\nHighest peak demand: {highest_peak:.0f} kW (occurred in {pd.to_datetime(highest_peak_month).strftime('%B %Y')})"")
+else:
+    print(""No peak demand data available. Unable to create CSV or plot."")",
+RawDataRetrieverAgent,What is today's energy consumption so far?,"## What is today's energy consumption so far?
+from datetime import datetime
+import pandas as pd
+import matplotlib.pyplot as plt
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_one_day_hourly_energy_consumption
+
+company = 'rudin'
+building = '345_Park'
+resources = ['electric_consumption', 'steam_consumption', 'gas_consumption']
+corresponding_consumption_measures = ['kWh', 'mlbs', 'therm']
+
+# Get today's date
+today = datetime.today().strftime('%Y-%m-%d')
+
+for resource, measure in zip(resources, corresponding_consumption_measures):
+    try:
+        # Get energy consumption for today
+        df = get_one_day_hourly_energy_consumption(company, building, resource, today, today)
+        
+        # Save data to CSV
+        csv_filename = f""{resource}_{today}.csv""
+        df.to_csv(csv_filename)
+        print(f""CSV file saved: {csv_filename}"")
+        
+        # Create bar plot
+        plt.figure(figsize=(12, 6))
+        df.plot(kind='bar')
+        plt.title(f""Hourly {resource.replace('_', ' ').title()} on {today}"")
+        plt.xlabel(""Hour"")
+        plt.ylabel(f""Consumption ({measure})"")
+        
+        # Rotate x-axis labels and align them
+        plt.xticks(range(len(df.index)), [idx.strftime('%H:%M') for idx in df.index], rotation=45, ha='right')
+        
+        # Adjust layout to prevent cutting off labels
+        plt.tight_layout()
+        
+        # Save the plot
+        plot_filename = f""{resource}_{today}_plot.png""
+        plt.savefig(plot_filename)
+        plt.close()
+        print(f""Plot saved: {plot_filename}"")
+        
+        energy_consumption_today = df.sum().sum()  # Sum all values in the DataFrame
+        print(f""Today's energy consumption so far for {resource} ({today}): {energy_consumption_today:.2f} {measure}"")
+    except Exception as e:
+        print(f""Could not retrieve data for resource {resource}: {e}"")",
+RawDataRetrieverAgent,What is today's peak demand so far?,"## What is today's peak demand so far?
+from datetime import datetime
+import pandas as pd
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import calc_daily_peak_demand
+
+company = 'rudin'
+building = '345_Park'
+resource = 'electric_demand'
+
+# Get today's date
+today = datetime.today().strftime('%Y-%m-%d')
+
+try:
+    # Calculate the peak demand for today
+    df_peak_demand = calc_daily_peak_demand(company, building, today, today)
+    peak_demand_today = df_peak_demand.iloc[0, 0]  # Access the single value directly
+    
+    print(f""Today's peak demand so far ({today}): {peak_demand_today} kW"")
+except Exception as e:
+    print(f""Could not retrieve data for resource {resource}: {e}"")",
+RawDataRetrieverAgent,What is the start and end date of the current billing period?,"## What is the start and end date of the current billing period?
+from datetime import datetime
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_resource_doc
+
+def get_current_billing_period(company, building, service_type='electric'):
+    resource_config = get_resource_doc(company=company, building=building, 
+                                       resource='billing_periods', query={'service_type': service_type},
+                                       extract_all=True, use_beta=None, domain='buildings')
+    
+    today = datetime.today()
+    
+    for period in resource_config:
+        start_date = datetime.strptime(period['start_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        end_date = datetime.strptime(period['end_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        
+        if start_date <= today <= end_date:
+            return start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')
+    
+    return None, None
+
+company = 'rudin'
+building = '345_Park'
+
+start_date, end_date = get_current_billing_period(company, building)
+if start_date and end_date:
+    print(f""The start date of the current billing period is: {start_date}"")
+    print(f""The end date of the current billing period is: {end_date}"")
+else:
+    print(""No current billing period found."")",
+RawDataRetrieverAgent,What is the start and end date of the last billing period?,"## What is the start and end date of the last billing period?
+from datetime import datetime
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_resource_doc
+
+def get_last_billing_period(company, building, service_type='electric'):
+    resource_config = get_resource_doc(company=company, building=building, 
+                                       resource='billing_periods', query={'service_type': service_type},
+                                       extract_all=True, use_beta=None, domain='buildings')
+    
+    today = datetime.today()
+    last_period = None
+    
+    for period in resource_config:
+        start_date = datetime.strptime(period['start_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        end_date = datetime.strptime(period['end_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        
+        if end_date < today:
+            if last_period is None or end_date > last_period['end_date']:
+                last_period = {
+                    'start_date': start_date,
+                    'end_date': end_date
+                }
+    
+    if last_period:
+        return last_period['start_date'].strftime('%Y-%m-%d'), last_period['end_date'].strftime('%Y-%m-%d')
+    else:
+        return None, None
+
+company = 'rudin'
+building = '345_Park'
+
+start_date, end_date = get_last_billing_period(company, building)
+if start_date and end_date:
+    print(f""The start date of the last billing period was: {start_date}"")
+    print(f""The end date of the last billing period was: {end_date}"")
+else:
+    print(""No previous billing period found."")
+start_date, end_date = get_last_billing_period(company, building)",
+RawDataRetrieverAgent,What billing period is the date '2024-05-21' in?,"## What billing period is the date '2024-05-21' in?
+from datetime import datetime
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_resource_doc
+
+def get_billing_period_for_date(company, building, target_date, service_type='electric'):
+    resource_config = get_resource_doc(company=company, building=building, 
+                                       resource='billing_periods', query={'service_type': service_type},
+                                       extract_all=True, use_beta=None, domain='buildings')
+    
+    target_date = datetime.strptime(target_date, '%Y-%m-%d')
+    
+    for period in resource_config:
+        start_date = datetime.strptime(period['start_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        end_date = datetime.strptime(period['end_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        
+        if start_date <= target_date <= end_date:
+            return start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')
+    
+    return None, None
+
+company = 'rudin'
+building = '345_Park'
+target_date = '2024-05-21'
+
+start_date, end_date = get_billing_period_for_date(company, building, target_date)
+if start_date and end_date:
+    print(f""The date '{target_date}' falls within the billing period:"")
+    print(f""Start date: {start_date}"")
+    print(f""End date: {end_date}"")
+else:
+    print(f""No billing period found for the date '{target_date}'."")",
+RawDataRetrieverAgent,What was the electric demand data for yesterday?,"## What was the electric demand data for yesterday?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_nantum_data
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def get_yesterday_electric_demand(company, building):
+    # Get yesterday's date
+    yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    # Retrieve electric demand data for yesterday, if it's one day, then use gran='15min' for better resolution
+    df_demand = get_nantum_data(company, building, 'electric_demand', yesterday, yesterday, gran='15min', total='only')
+    return df_demand, yesterday
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get yesterday's electric demand data
+df_demand, yesterday_date = get_yesterday_electric_demand(company, building)
+
+if df_demand is not None: 
+    #  # Optionally, plot the demand data
+    plt.figure(figsize=(12, 6))
+    df_demand.plot()
+    plt.title(f""Electric Demand for {building} on {yesterday_date}"")
+    plt.xlabel(""Time"")
+    plt.ylabel(""Demand (kW)"")
+    plt.grid(True)
+    
+    # Rotate x-axis labels for better readability
+    plt.xticks(rotation=45)
+    
+    # Save the plot
+    plot_filename = f""{company}_{building}_electric_demand_{yesterday_date}.png""
+    plt.tight_layout()
+    plt.savefig(plot_filename)
+    print(f""\nPlot saved as {plot_filename}"")
+    # Save data to CSV
+    csv_filename = f""{company}_{building}_electric_demand_{yesterday_date}.csv""
+    df_demand.to_csv(csv_filename)
+    print(f""Data saved to {csv_filename}"")
+    
+else:
+    print(f""No electric demand data available for {building} on {yesterday_date}"")",
+RawDataRetrieverAgent,What was the electric demand data last month? ,"## What was the electric demand data last month? 
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_nantum_data
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def get_last_month_electric_demand(company, building):
+    # Calculate the date range for last month
+    today = datetime.now()
+    first_day_of_this_month = today.replace(day=1)
+    last_day_of_last_month = first_day_of_this_month - timedelta(days=1)
+    first_day_of_last_month = last_day_of_last_month.replace(day=1)
+    
+    start_date = first_day_of_last_month.strftime('%Y-%m-%d')
+    end_date = last_day_of_last_month.strftime('%Y-%m-%d')
+    
+    # Retrieve electric demand data
+    df_demand = get_nantum_data(company, building, 'electric_demand', start_date, end_date, gran='60min', total='only')
+    
+    return df_demand, start_date, end_date
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get last month's electric demand data
+df_demand, start_date, end_date = get_last_month_electric_demand(company, building)
+
+if df_demand is not None:  
+    # Plot the electric demand data
+    plt.figure(figsize=(15, 6))
+    plt.plot(df_demand.index, df_demand.iloc[:, 0], linewidth=2)
+    
+    # Set title and labels
+    plt.title(f'Electric Demand for {building} ({start_date} to {end_date})', fontsize=16)
+    plt.xlabel('Date', fontsize=12)
+    plt.ylabel('Electric Demand (kW)', fontsize=12)
+    
+    # Format x-axis ticks using df_demand index, showing only each day
+    plt.xticks(df_demand.resample('D').mean().index, df_demand.resample('D').mean().index.strftime('%m-%d'), rotation=45, ha='right')
+    
+    # Add grid for better readability
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    # Adjust layout
+    plt.tight_layout()
+    
+    # Save the figure
+    fig_path = f'electric_demand_{building}_{start_date}_to_{end_date}.png'
+    plt.savefig(fig_path)
+    plt.show()
+    # plt.close()
+    
+    # Save data to CSV
+    csv_path = f'electric_demand_{building}_{start_date}_to_{end_date}.csv'
+    df_demand.to_csv(csv_path)
+    
+    # Print paths
+    print(f""Figure saved to: {fig_path}"")
+    print(f""Data saved to: {csv_path}"")
+    
+    # Print some statistics
+    print(f""\nAverage electric demand: {df_demand.mean().values[0]:.2f} kW"")
+    print(f""Maximum electric demand: {df_demand.max().values[0]:.2f} kW"")
+    print(f""Minimum electric demand: {df_demand.min().values[0]:.2f} kW"")
+
+else:
+    print(f""No electric demand data available for {building} from {start_date} to {end_date}"")",
+RawDataRetrieverAgent,What was the daily electric consumption for last month?,"## What was the daily electric consumption for last month?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_daily_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+
+today = datetime.now()
+first_day_of_this_month = today.replace(day=1)
+last_day_of_last_month = first_day_of_this_month - timedelta(days=1)
+first_day_of_last_month = last_day_of_last_month.replace(day=1)
+start_date = first_day_of_last_month.strftime('%Y-%m-%d')
+end_date = last_day_of_last_month.strftime('%Y-%m-%d')
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+# Retrieve electric consumption data
+df_consumption = get_daily_energy_consumption(company, building, 'electric_consumption', start_date, end_date)
+
+if df_consumption is not None:
+    # Print results
+    print(f""Daily Electric Consumption Data for {building} from {start_date} to {end_date}:"")
+    print(df_consumption)
+
+    # Optionally, display the plot
+    # Plot daily consumption data
+    plt.figure(figsize=(16, 8))  # Reduced figure size
+    plt.bar(df_consumption.index.strftime('%d'), df_consumption.iloc[:,0], width=0.8)
+    plt.title(f""Daily Electric Consumption for {building}\n({start_date} to {end_date})"")
+    plt.xlabel(""Day of Month"")
+    plt.ylabel(""Consumption (kWh)"")
+    plt.grid(True, axis='y')
+    
+    # Rotate x-axis labels
+    plt.xticks(rotation=45, ha='right')
+    for i, v in enumerate(df_consumption.values):
+        plt.text(i, v[0], f'{v[0]:.0f}', ha='center', va='bottom', fontsize=8)
+    
+    # Adjust layout and save the plot
+    plt.tight_layout()
+    plot_filename = f""{company}_{building}_daily_electric_consumption_{start_date}_to_{end_date}.png""
+    plt.savefig(plot_filename, dpi=300, bbox_inches='tight')
+    print(f""\nPlot saved as {plot_filename}"")
+    
+    # Save data to CSV
+    csv_filename = f""{company}_{building}_daily_electric_consumption_{start_date}_to_{end_date}.csv""
+    df_consumption.to_csv(csv_filename)
+    print(f""Data saved to {csv_filename}"")
+
+else:
+    print(f""No electric consumption data available for {building} from {start_date} to {end_date}"")",
+RawDataRetrieverAgent,What was the total electric consumption for last month?,"## What was the total electric consumption for last month?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_daily_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+
+today = datetime.now()
+first_day_of_this_month = today.replace(day=1)
+last_day_of_last_month = first_day_of_this_month - timedelta(days=1)
+first_day_of_last_month = last_day_of_last_month.replace(day=1)
+start_date = first_day_of_last_month.strftime('%Y-%m-%d')
+end_date = last_day_of_last_month.strftime('%Y-%m-%d')
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+# Retrieve electric consumption data
+df_consumption = get_daily_energy_consumption(company, building, 'electric_consumption', start_date, end_date)
+
+if df_consumption is not None:
+    # Calculate total consumption
+    total_consumption = df_consumption.sum().sum() 
+    # Save data to CSV
+    csv_filename = f""{building}_electric_consumption_{start_date}_to_{end_date}.csv""
+    df_consumption.to_csv(csv_filename)
+    
+    # Create bar plot
+    plt.figure(figsize=(12, 6))
+    ax = df_consumption.plot(kind='bar')
+    plt.title(f""Daily Electric Consumption for {building}\n{start_date} to {end_date}"")
+    plt.xlabel(""Date"")
+    plt.ylabel(""Consumption (kWh)"")
+    
+    # Align x-ticks with bar centers
+    plt.xticks(range(len(df_consumption.index)), df_consumption.index.strftime('%m-%d'), rotation=45, ha='right')
+    
+    plt.tight_layout()
+    
+    # Save figure
+    fig_filename = f""{building}_electric_consumption_{start_date}_to_{end_date}.png""
+    plt.savefig(fig_filename)    
+
+    print(f""The total electric consumption for {building} from {start_date} to {end_date} was:"")
+    print(f""{total_consumption:.2f} kWh"")
+    print(f""\nMonth-to-date breakdown saved to CSV: {csv_filename}"")
+    print(f""Bar plot saved as: {fig_filename}"")
+else:
+    print(f""No electric consumption data available for {building} from {start_date} to {end_date}"")",
+RawDataRetrieverAgent,What was the average electric consumption for last month?,"## What was the average electric consumption for last month?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_daily_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+
+today = datetime.now()
+first_day_of_this_month = today.replace(day=1)
+last_day_of_last_month = first_day_of_this_month - timedelta(days=1)
+first_day_of_last_month = last_day_of_last_month.replace(day=1)
+start_date = first_day_of_last_month.strftime('%Y-%m-%d')
+end_date = last_day_of_last_month.strftime('%Y-%m-%d')
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+# Retrieve electric consumption data
+df_consumption = get_daily_energy_consumption(company, building, 'electric_consumption', start_date, end_date)
+
+if df_consumption is not None:
+    # Calculate total consumption
+    avg_consumption = df_consumption.mean().mean()
+    # Save data to CSV
+    csv_filename = f""{building}_electric_consumption_{start_date}_to_{end_date}.csv""
+    df_consumption.to_csv(csv_filename)
+    
+    # Create bar plot
+    plt.figure(figsize=(12, 6))
+    ax = df_consumption.plot(kind='bar')
+    plt.title(f""Daily Electric Consumption for {building}\n{start_date} to {end_date}"")
+    plt.xlabel(""Date"")
+    plt.ylabel(""Consumption (kWh)"")
+    
+    # Align x-ticks with bar centers
+    plt.xticks(range(len(df_consumption.index)), df_consumption.index.strftime('%m-%d'), rotation=45, ha='right')
+    
+    plt.tight_layout()
+    
+    # Save figure
+    fig_filename = f""{building}_electric_consumption_{start_date}_to_{end_date}.png""
+    plt.savefig(fig_filename)    
+
+    print(f""The average electric consumption for {building} from {start_date} to {end_date} was:"")
+    print(f""{avg_consumption:.2f} kWh"")
+    print(f""\nMonth-to-date breakdown saved to CSV: {csv_filename}"")
+    print(f""Bar plot saved as: {fig_filename}"")
+else:
+    print(f""No electric consumption data available for {building} from {start_date} to {end_date}"")",
+RawDataRetrieverAgent,"What was the electric demand data from the latest year with available data, Jan 10 to Feb 10? What is the total electric consumption from Jan 10 to Feb 10?","## What was the electric demand data from the latest year with available data, Jan 10 to Feb 10? What is the total electric consumption from Jan 10 to Feb 10?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_nantum_data, get_daily_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def get_latest_year_demand_data(company, building, start_month_day, end_month_day):
+    current_year = datetime.now().year
+    
+    for year in range(current_year, current_year - 5, -1):  # Check up to 5 years back
+        start_date = f""{year}-{start_month_day}""
+        end_date = f""{year}-{end_month_day}""
+        
+        df = get_nantum_data(company, building, 'electric_demand', start_date, end_date, gran='60min', total='only')
+        
+        if df is not None:
+            return df, year
+    
+    return None, None
+
+def get_latest_year_consumption_data(company, building, start_month_day, end_month_day):
+    current_year = datetime.now().year
+    
+    for year in range(current_year, current_year - 5, -1):  # Check up to 5 years back
+        start_date = f""{year}-{start_month_day}""
+        end_date = f""{year}-{end_month_day}""
+        
+        df = get_daily_energy_consumption(company, building, 'electric_consumption', start_date, end_date)
+        
+        if df is not None:
+            return df, year
+    
+    return None, None
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get electric demand data
+demand_df, demand_year = get_latest_year_demand_data(company, building, '01-10', '02-10')
+
+# Get electric consumption data
+consumption_df, consumption_year = get_latest_year_consumption_data(company, building, '01-10', '02-10')
+
+if demand_df is not None:
+    print(f""Electric demand data from {demand_year}-01-10 to {demand_year}-02-10:"")
+    print(demand_df)
+    
+    # Save demand data to CSV
+    demand_csv_path = f""{company}_{building}_electric_demand_{demand_year}_01-10_to_02-10.csv""
+    demand_df.to_csv(demand_csv_path)
+    print(f""Demand data saved to: {demand_csv_path}"")
+    
+    # Plot demand data
+    # Get unique dates from the index
+    unique_dates = demand_df.index.floor('D').unique()
+
+    # Create a plot
+    fig, ax = plt.subplots(figsize=(12, 6))
+    demand_df.plot(ax=ax)
+
+    # Set x-ticks to show only dates
+    ax.set_xticks(unique_dates)
+    ax.set_xticklabels(unique_dates.strftime('%Y-%m-%d'), rotation=45, ha='right')
+
+    # Adjust the x-axis limits to align with the data
+    ax.set_xlim(demand_df.index.min(), demand_df.index.max())
+
+    plt.title(f""Electric Demand for {building} ({demand_year}-01-10 to {demand_year}-02-10)"")
+    plt.xlabel(""Date"")
+    plt.ylabel(""Demand (kW)"")
+    plt.grid(True)
+    plt.tight_layout()
+
+    # Save the plot
+    demand_plot_path = f""{company}_{building}_electric_demand_{demand_year}_01-10_to_02-10.png""
+    plt.savefig(demand_plot_path, bbox_inches='tight')
+    print(f""Demand plot saved to: {demand_plot_path}"")
+else:
+    print(""No electric demand data available for the specified date range."")
+
+if consumption_df is not None:
+    total_consumption = consumption_df.sum().sum()
+    print(f""\nTotal electric consumption from {consumption_year}-01-10 to {consumption_year}-02-10:"")
+    print(f""{total_consumption:.2f} kWh"")
+    
+    # Save consumption data to CSV
+    consumption_csv_path = f""{company}_{building}_electric_consumption_{consumption_year}_01-10_to_02-10.csv""
+    consumption_df.to_csv(consumption_csv_path)
+    print(f""Consumption data saved to: {consumption_csv_path}"")
+    
+    # Plot consumption data
+    plt.figure(figsize=(12, 6))
+    consumption_df.plot(kind='bar')
+    plt.title(f""Daily Electric Consumption for {building} ({consumption_year}-01-10 to {consumption_year}-02-10)"")
+    plt.xlabel(""Date"")
+    plt.ylabel(""Consumption (kWh)"")
+    plt.xticks(range(len(consumption_df.index)), consumption_df.index.strftime('%m-%d'), rotation=45, ha='right')
+    plt.tight_layout()
+    consumption_plot_path = f""{company}_{building}_electric_consumption_{consumption_year}_01-10_to_02-10.png""
+    plt.savefig(consumption_plot_path)
+    print(f""Consumption plot saved to: {consumption_plot_path}"")
+else:
+    print(""No electric consumption data available for the specified date range."")",
+RawDataRetrieverAgent,What was the steam demand data over the last 7 days? What was the steam total consumption for last 7 days? ,"## What was the steam demand data over the last 7 days? What was the steam total consumption for last 7 days? 
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_nantum_data, get_total_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def get_last_7_days_data(company, building, resource):
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=6)  # 7 days including today
+    
+    start_date_str = start_date.strftime('%Y-%m-%d')
+    end_date_str = end_date.strftime('%Y-%m-%d')
+    
+    df = get_nantum_data(company, building, resource, start_date_str, end_date_str, gran='60min', total='only')
+    
+    return df, start_date_str, end_date_str
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get steam demand data
+demand_data, start_date, end_date = get_last_7_days_data(company, building, 'steam_demand')
+
+if demand_data is not None:
+    # Save demand data to CSV
+    demand_csv_path = f""{company}_{building}_steam_demand_{start_date}_to_{end_date}.csv""
+    demand_data.to_csv(demand_csv_path)
+    print(f""Steam demand data saved to: {demand_csv_path}"")
+
+    # Get unique dates from the index
+    unique_dates = demand_data.index.floor('D').unique()
+
+    # Create a plot
+    fig, ax = plt.subplots(figsize=(12, 6))
+    demand_data.plot(ax=ax)
+
+    # Set x-ticks to show only dates
+    ax.set_xticks(unique_dates)
+    ax.set_xticklabels(unique_dates.strftime('%Y-%m-%d'), rotation=45, ha='right')
+
+    # Adjust the x-axis limits to align with the data
+    ax.set_xlim(demand_data.index.min(), demand_data.index.max())
+
+    plt.title(f""Steam Demand for {building} ({start_date} to {end_date})"")
+    plt.xlabel(""Date"")
+    plt.ylabel(""Demand (Mlbs/hr)"")
+    plt.grid(True)
+    plt.tight_layout()
+
+    # Save the plot
+    demand_plot_path = f""{company}_{building}_steam_demand_{start_date}_to_{end_date}.png""
+    plt.savefig(demand_plot_path, bbox_inches='tight')
+    print(f""Steam demand plot saved to: {demand_plot_path}"")
+else:
+    print(""No steam demand data available for the last 7 days."")
+
+# Get total consumption data
+total_consumption = get_total_energy_consumption(company, building, 'steam_demand', start_date, end_date)
+if total_consumption is not None:
+    print(f""\nTotal Steam Consumption for {building} from {start_date} to {end_date}:"")
+    print(f""{total_consumption:.2f} Mlbs"")  # Assuming steam consumption is in Mlbs
+
+else:
+    print(""\nNo steam consumption data available for the last 7 days."")",
+RawDataRetrieverAgent,What was the steam total consumption for last month?,"## What was the steam total consumption for last month?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_nantum_data, get_total_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def get_last_month_data(company, building, resource):
+    end_date = datetime.now().date().replace(day=1) - timedelta(days=1)  # Last day of previous month
+    start_date = end_date.replace(day=1)  # First day of previous month
+    
+    start_date_str = start_date.strftime('%Y-%m-%d')
+    end_date_str = end_date.strftime('%Y-%m-%d')
+    
+    df = get_nantum_data(company, building, resource, start_date_str, end_date_str, gran='60min', total='only')
+    
+    return df, start_date_str, end_date_str
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get steam consumption data for last month
+consumption_data, start_date, end_date = get_last_month_data(company, building, 'steam_demand')
+
+if consumption_data is not None:
+    # Save consumption data to CSV
+    consumption_csv_path = f""{company}_{building}_steam_consumption_{start_date}_to_{end_date}.csv""
+    consumption_data.to_csv(consumption_csv_path)
+    print(f""Steam consumption data saved to: {consumption_csv_path}"")
+
+    # Get total consumption data
+    total_consumption = get_total_energy_consumption(company, building, 'steam_demand', start_date, end_date)
+    if total_consumption is not None:
+        print(f""\nTotal Steam Consumption for {building} from {start_date} to {end_date}:"")
+        print(f""{total_consumption:.2f} Mlbs"")  # Assuming steam consumption is in Mlbs
+
+        # Create a plot
+        fig, ax = plt.subplots(figsize=(12, 6))
+        consumption_data.plot(ax=ax)
+
+        # Set x-ticks to show only dates
+        date_range = pd.date_range(start=start_date, end=end_date, freq='D')
+        ax.set_xticks(date_range)
+        ax.set_xticklabels([date.strftime('%Y-%m-%d') for date in date_range], rotation=45, ha='right')
+
+        # Adjust the x-axis limits to align with the data
+        ax.set_xlim(consumption_data.index.min(), consumption_data.index.max())
+
+        plt.title(f""Steam Consumption for {building} ({start_date} to {end_date})"")
+        plt.xlabel(""Date"")
+        plt.ylabel(""Consumption (Mlbs)"")
+        plt.grid(True)
+        plt.tight_layout()
+
+        # Save the plot
+        consumption_plot_path = f""{company}_{building}_steam_consumption_{start_date}_to_{end_date}.png""
+        plt.savefig(consumption_plot_path, bbox_inches='tight')
+        print(f""Steam consumption plot saved to: {consumption_plot_path}"")
+    else:
+        print(""\nNo steam consumption data available for last month."")
+else:
+    print(""No steam consumption data available for last month."")",
+RawDataRetrieverAgent,What was the peak demand for the last billing period?,"## What was the peak demand for the last billing period?
+from datetime import datetime
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_resource_doc, get_nantum_data, calc_daily_peak_demand
+
+def get_last_billing_period(company, building, service_type='electric'):
+    resource_config = get_resource_doc(company=company, building=building, 
+                                       resource='billing_periods', query={'service_type': service_type},
+                                       extract_all=True, use_beta=None, domain='buildings')
+    
+    today = datetime.today()
+    last_period = None
+    
+    for period in resource_config:
+        end_date = datetime.strptime(period['end_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        if end_date < today:
+            if last_period is None or end_date > datetime.strptime(last_period['end_date'], '%Y-%m-%dT%H:%M:%S.%fZ'):
+                last_period = period
+    
+    if last_period:
+        return last_period['start_date'][:10], last_period['end_date'][:10]
+    else:
+        return None, None
+
+def get_peak_demand_for_period(company, building, start_date, end_date):
+    df_peak_demand = calc_daily_peak_demand(company, building, start_date, end_date)
+    if not df_peak_demand.empty:
+        peak_demand = df_peak_demand['peak_demand'].max()
+        peak_date = df_peak_demand['peak_demand'].idxmax().strftime('%Y-%m-%d')
+        return peak_demand, peak_date
+    return None, None
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get the last billing period
+start_date, end_date = get_last_billing_period(company, building)
+
+if start_date and end_date:
+    peak_demand, peak_date = get_peak_demand_for_period(company, building, start_date, end_date)
+    
+    if peak_demand is not None:
+        print(f""For the last billing period ({start_date} to {end_date}):"")
+        print(f""The peak demand was {peak_demand:.2f} kW on {peak_date}"")
+    else:
+        print(f""No peak demand data available for the period from {start_date} to {end_date}"")
+else:
+    print(""No completed billing period found"")",
+RawDataRetrieverAgent,What was the energy consumption yesterday?,"## What was the energy consumption yesterday?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_one_day_hourly_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def save_data_to_csv(df, filename):
+    df.to_csv(filename)
+    print(f""Data saved to: {filename}"")
+
+def create_plot(df, plot_type, title, filename, ylabel):
+    plt.figure(figsize=(12, 6))
+    if plot_type == 'line':
+        df.plot(kind='line')
+    elif plot_type == 'bar':
+        df.plot(kind='bar')
+    plt.title(title)
+    plt.xlabel(""Time"")
+    plt.ylabel(ylabel)
+    plt.grid(True)
+    plt.xticks(range(len(df)), [t.strftime('%H:00') for t in df.index], rotation=45)
+    plt.tight_layout()
+    plt.savefig(filename)
+    # plt.close()
+    plt.show()
+    print(f""{plot_type.capitalize()} plot saved as: {filename}"")
+
+# Set company and building
+company = ""rudin""
+building = ""345_Park""
+resources = [(""electric_consumption"", ""kWh""), (""steam_consumption"", ""Mlb""), (""gas_consumption"", ""therms"")]
+yesterday = (datetime.now() - timedelta(days=1)).strftime(""%Y-%m-%d"")
+
+for resource, unit in resources:
+    df_consumption = get_one_day_hourly_energy_consumption(company, building, resource, yesterday, yesterday)
+    
+    if df_consumption is not None:
+        # Calculate total consumption
+        total_consumption = df_consumption.sum().sum()
+        
+        # Save data to CSV
+        csv_filename = f""{company}_{building}_{resource}_{yesterday}.csv""
+        save_data_to_csv(df_consumption, csv_filename)
+        
+        # Create and save bar plot
+        bar_plot_filename = f""{company}_{building}_{resource}_bar_{yesterday}.png""
+        create_plot(df_consumption, 'bar', f""Hourly {resource.replace('_', ' ').title()} for {building} on {yesterday}"", bar_plot_filename, f""Consumption ({unit})"")
+        
+        # Print results
+        print(f""\nTotal {resource.replace('_', ' ')} for {building} on {yesterday}: {total_consumption:.2f} {unit}"")
+        print(""\nHourly breakdown:"")
+        print(df_consumption)
+    else:
+        print(f""No {resource.replace('_', ' ')} data available for {building} on {yesterday}"")",
+RawDataRetrieverAgent,What is the GHG emission last 12 month?,"## What is the GHG emission last 12 month?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import calc_ghg_emission
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+
+def get_ghg_emission_last_12_months(company, building):
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=365)
+    
+    start_date_str = start_date.strftime('%Y-%m-%d')
+    end_date_str = end_date.strftime('%Y-%m-%d')
+    
+    try:
+        df_ghg = calc_ghg_emission(company, building, start_date_str, end_date_str, gran='1D')
+        return df_ghg, start_date_str, end_date_str
+    except Exception as e:
+        print(f""Error calculating GHG emissions: {str(e)}"")
+        return None, start_date_str, end_date_str
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get GHG emissions for the last 12 months
+df_ghg, start_date, end_date = get_ghg_emission_last_12_months(company, building)
+
+if df_ghg is not None and not df_ghg.empty:
+    # Save the datasheet
+    file_name = f""{company}_{building}_GHG_emissions_{start_date}_to_{end_date}.csv""
+    df_ghg.to_csv(file_name)
+    print(f""GHG emission data saved as: {file_name}"")
+
+    # Plot the data
+    plt.figure(figsize=(12, 6))
+    plt.plot(df_ghg.index, df_ghg['total_ghg_kgCO2'])
+    plt.title(f""GHG Emissions for {building} ({start_date} to {end_date})"")
+    plt.xlabel(""Date"")
+    plt.ylabel(""GHG Emissions (kgCO2)"")
+    plt.grid(True)
+    
+    # Rotate and align the tick labels so they look better
+    plt.gcf().autofmt_xdate()
+    
+    # Save the plot
+    plot_file_name = f""{company}_{building}_GHG_emissions_plot_{start_date}_to_{end_date}.png""
+    plt.savefig(plot_file_name)
+    print(f""GHG emission plot saved as: {plot_file_name}"")
+    
+    # Optionally display the plot
+    
+else:
+    print(f""No GHG emission data available for {building} from {start_date} to {end_date}"")",
+RawDataRetrieverAgent,What is the GHG emission last 12 month for each month and source breakdown?,"## What is the GHG emission last 12 month for each month and source breakdown?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import calc_ghg_emission
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def get_ghg_emission_last_12_months(company, building):
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=365)
+    
+    start_date_str = start_date.strftime('%Y-%m-%d')
+    end_date_str = end_date.strftime('%Y-%m-%d')
+    
+    try:
+        df_ghg = calc_ghg_emission(company, building, start_date_str, end_date_str, gran='1D')
+        return df_ghg, start_date_str, end_date_str
+    except Exception as e:
+        print(f""Error calculating GHG emissions: {str(e)}"")
+        return None, start_date_str, end_date_str
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get GHG emissions for the last 12 months
+df_ghg, start_date, end_date = get_ghg_emission_last_12_months(company, building)
+
+if df_ghg is not None and not df_ghg.empty:
+    # Group by month and sum the emissions
+    monthly_ghg = df_ghg.groupby(df_ghg.index.to_period('M')).sum()
+    monthly_ghg.index = monthly_ghg.index.strftime('%B %Y')
+    
+    # Round the values to 2 decimal places
+    monthly_ghg = monthly_ghg.round(2)
+    
+    # Save the result to a CSV file
+    file_name = f""{company}_{building}_monthly_GHG_emissions_{start_date}_to_{end_date}.csv""
+    monthly_ghg.to_csv(file_name)
+    print(f""Monthly GHG emission data saved as: {file_name}"")
+    
+    # Plot the data
+    plt.figure(figsize=(12, 6))
+    for column in monthly_ghg.columns:
+        plt.plot(monthly_ghg.index, monthly_ghg[column], label=column)
+    
+    plt.title(f""Monthly GHG Emissions by Source for {building} ({start_date} to {end_date})"")
+    plt.xlabel(""Month"")
+    plt.ylabel(""GHG Emissions (kgCO2)"")
+    plt.legend()
+    plt.grid(True)
+    
+    # Rotate and align the tick labels so they look better
+    plt.xticks(rotation=45, ha='right')
+    
+    # Save the plot
+    plot_file_name = f""{company}_{building}_monthly_GHG_emissions_plot_{start_date}_to_{end_date}.png""
+    plt.tight_layout()
+    plt.savefig(plot_file_name)
+    print(f""Monthly GHG emission plot saved as: {plot_file_name}"")
+    
+    # Optionally display the plot
+    
+    
+    # Print the monthly breakdown
+    print(""\nMonthly GHG Emissions Breakdown (kgCO2):"")
+    print(monthly_ghg.to_string())
+else:
+    print(f""No GHG emission data available for {building} from {start_date} to {end_date}"")",
+RawDataRetrieverAgent,What was the GHG emission of the building yesterday?,"## What was the GHG emission of the building yesterday?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import calc_ghg_emission
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def get_yesterday_ghg_emission(company, building):
+    yesterday = (datetime.now() - timedelta(days=1)).date()
+    yesterday_str = yesterday.strftime('%Y-%m-%d')
+    
+    try:
+        # Get daily data
+        df_ghg_daily = calc_ghg_emission(company, building, yesterday_str, yesterday_str, gran='1D')
+        
+        # Get hourly data
+        df_ghg_hourly = calc_ghg_emission(company, building, yesterday_str, yesterday_str, gran='60min')
+        
+        return df_ghg_daily, df_ghg_hourly, yesterday_str
+    except Exception as e:
+        print(f""Error calculating GHG emissions: {str(e)}"")
+        return None, None, yesterday_str
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get GHG emissions for yesterday
+df_ghg_daily, df_ghg_hourly, yesterday_date = get_yesterday_ghg_emission(company, building)
+
+if df_ghg_daily is not None and not df_ghg_daily.empty:
+    # Extract the daily GHG emissions for yesterday
+    total_ghg = df_ghg_daily['total_ghg_kgCO2'].iloc[0]
+    
+    print(f""GHG emissions for {building} on {yesterday_date}:"")
+    print(f""Total GHG emissions: {total_ghg:.2f} kgCO2"")
+    
+    # Print breakdown by source if available
+    if 'elec_ghg_kgCO2' in df_ghg_daily.columns:
+        print(f""- From electricity: {df_ghg_daily['elec_ghg_kgCO2'].iloc[0]:.2f} kgCO2"")
+    if 'steam_ghg_kgCO2' in df_ghg_daily.columns:
+        print(f""- From steam: {df_ghg_daily['steam_ghg_kgCO2'].iloc[0]:.2f} kgCO2"")
+    if 'gas_ghg_kgCO2' in df_ghg_daily.columns:
+        print(f""- From gas: {df_ghg_daily['gas_ghg_kgCO2'].iloc[0]:.2f} kgCO2"")
+    
+    # Print and plot hourly breakdown
+    if df_ghg_hourly is not None and not df_ghg_hourly.empty:
+        print(""\nHourly GHG emissions breakdown:"")
+        df_ghg_hourly['hour'] = df_ghg_hourly.index.strftime('%H:00')
+        hourly_summary = df_ghg_hourly.set_index('hour')
+        print(hourly_summary.to_string(float_format='{:.2f}'.format))
+        
+        # Save hourly data to CSV
+        csv_filename = f""{company}_{building}_hourly_GHG_emissions_{yesterday_date}.csv""
+        hourly_summary.to_csv(csv_filename)
+        print(f""\nHourly GHG emission data saved as: {csv_filename}"")
+        
+        # Plot hourly data
+        plt.figure(figsize=(12, 6))
+        for column in hourly_summary.columns:
+            plt.plot(hourly_summary.index, hourly_summary[column], label=column)
+        
+        plt.title(f""Hourly GHG Emissions for {building} on {yesterday_date}"")
+        plt.xlabel(""Hour"")
+        plt.ylabel(""GHG Emissions (kgCO2)"")
+        plt.legend()
+        plt.grid(True)
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        
+        # Save the plot
+        plot_filename = f""{company}_{building}_hourly_GHG_emissions_plot_{yesterday_date}.png""
+        plt.savefig(plot_filename)
+        print(f""Hourly GHG emission plot saved as: {plot_filename}"")
+        
+        # Display the plot
+        
+    else:
+        print(""\nHourly GHG emission data not available."")
+else:
+    print(f""No GHG emission data available for {building} on {yesterday_date}"")",
+RawDataRetrieverAgent,What month over the past 12 months use the most energy?,"## What month over the past 12 months use the most energy?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_daily_energy_consumption
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+def save_data_to_csv(df, filename):
+    df.to_csv(filename)
+    print(f""Data saved to: {filename}"")
+
+def create_plot(df, title, filename, ylabel):
+    fig, axes = plt.subplots(len(df.columns), 1, figsize=(12, 6*len(df.columns)), sharex=True)
+    fig.suptitle(title, fontsize=16)
+    
+    for i, (column, ax) in enumerate(zip(df.columns, axes)):
+        df[column].plot(kind='bar', ax=ax)
+        ax.set_title(f""{column.replace('_', ' ').title()}"")
+        ax.set_xlabel(""Month"")
+        ax.set_ylabel(ylabel[i])
+        ax.grid(True)
+        
+    plt.tight_layout()
+    plt.savefig(filename)
+    plt.show()
+    print(f""Bar plots saved as: {filename}"")
+
+# Set company and building
+company = ""rudin""
+building = ""845_third""
+resources = [(""electric_consumption"", ""kWh""), (""steam_consumption"", ""Mlb""), (""gas_consumption"", ""therms"")]
+
+# Get current date and calculate date 12 months ago
+now = datetime.now()
+start_date = (now - timedelta(days=365)).replace(day=1).strftime(""%Y-%m-%d"")
+end_date = now.strftime(""%Y-%m-%d"")
+
+# Initialize DataFrame to store monthly consumption
+monthly_consumption = pd.DataFrame()
+
+for resource, unit in resources:
+    print(f""\nProcessing {resource.replace('_', ' ')}:"")
+    
+    # Get data for the past 12 months
+    df = get_daily_energy_consumption(company, building, resource, start_date, end_date)
+    
+    if df is not None:
+        # Resample to monthly data
+        monthly_data = df.resample('M').sum()
+        monthly_data.index = monthly_data.index.strftime('%Y-%m')
+        monthly_consumption[resource] = monthly_data[monthly_data.columns[0]]
+        
+        # Find the month with the highest consumption for this resource
+        max_month = monthly_consumption[resource].idxmax()
+        max_value = monthly_consumption[resource].max()
+        
+        print(f""The month with the highest {resource.replace('_', ' ')} was: {max_month}"")
+        print(f""Consumption: {max_value:.2f} {unit}"")
+    else:
+        print(f""No {resource.replace('_', ' ')} data available"")
+
+if not monthly_consumption.empty:
+    # Save data to CSV
+    csv_filename = f""{company}_{building}_monthly_energy_consumption_past_12_months.csv""
+    save_data_to_csv(monthly_consumption, csv_filename)
+    
+    # Create and save bar plots
+    bar_plot_filename = f""{company}_{building}_monthly_energy_consumption_past_12_months.png""
+    create_plot(monthly_consumption, f""Monthly Energy Consumption for {building} (Past 12 Months)"", bar_plot_filename, [unit for _, unit in resources])
+    
+    print(""\nMonthly energy consumption:"")
+    print(monthly_consumption)
+else:
+    print(""No energy consumption data available for the past 12 months"")",
+RawDataRetrieverAgent,What's the total GHG emission yesterday?,"## What's the total GHG emission yesterday?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import calc_ghg_emission
+
+def get_yesterday_ghg_emission(company, building):
+    yesterday = (datetime.now() - timedelta(days=1)).date()
+    yesterday_str = yesterday.strftime('%Y-%m-%d')
+    
+    try:
+        df_ghg = calc_ghg_emission(company, building, yesterday_str, yesterday_str, gran='1D')
+        return df_ghg, yesterday_str
+    except Exception as e:
+        print(f""Error calculating GHG emissions: {str(e)}"")
+        return None, yesterday_str
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get GHG emissions for yesterday
+df_ghg, yesterday_date = get_yesterday_ghg_emission(company, building)
+
+if df_ghg is not None and not df_ghg.empty:
+    # Extract the total GHG emissions for yesterday
+    total_ghg = df_ghg['total_ghg_kgCO2'].iloc[0]
+    
+    print(f""Total GHG emissions for {building} on {yesterday_date}:"")
+    print(f""{total_ghg:.2f} kgCO2"")
+    
+    # Print breakdown by source if available
+    print(""\nBreakdown by source:"")
+    if 'elec_ghg_kgCO2' in df_ghg.columns:
+        print(f""- From electricity: {df_ghg['elec_ghg_kgCO2'].iloc[0]:.2f} kgCO2"")
+    if 'steam_ghg_kgCO2' in df_ghg.columns:
+        print(f""- From steam: {df_ghg['steam_ghg_kgCO2'].iloc[0]:.2f} kgCO2"")
+    if 'gas_ghg_kgCO2' in df_ghg.columns:
+        print(f""- From gas: {df_ghg['gas_ghg_kgCO2'].iloc[0]:.2f} kgCO2"")
+else:
+    print(f""No GHG emission data available for {building} on {yesterday_date}"")",
+RawDataRetrieverAgent,What is the current interior_space_temperature?,"## What is the current interior_space_temperature?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_nantum_data
+
+def get_current_interior_temperature(company, building):
+    end_date = datetime.now()
+    start_date = end_date - timedelta(hours=1)  # Get data for the last hour
+    
+    start_date_str = start_date.strftime('%Y-%m-%d')
+    end_date_str = end_date.strftime('%Y-%m-%d')
+    
+    try:
+        df_temp = get_nantum_data(company, building, 'interior_space_temperature', start_date_str, end_date_str, gran='15min', rename=True)
+        if not df_temp.empty:
+            # Get the most recent temperature reading
+            current_temp = df_temp.iloc[-1, -1] # the last column is average
+            current_time = df_temp.index[-1]
+            return current_temp, current_time
+        else:
+            return None, None
+    except Exception as e:
+        print(f""Error retrieving interior space temperature: {str(e)}"")
+        return None, None
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get current interior space temperature
+current_temp, current_time = get_current_interior_temperature(company, building)
+
+if current_temp is not None:
+    print(f""Current interior space temperature for {building}:"")
+    print(f""{current_temp:.1f}°F at {current_time.strftime('%Y-%m-%d %H:%M:%S')}"")
+else:
+    print(f""Unable to retrieve current interior space temperature for {building}"")",
+RawDataRetrieverAgent,What's the temperature data for today?,"## What's the temperature data for today?
+from datetime import datetime
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_nantum_data
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def get_today_temperature_data(company, building):
+    today = datetime.now().date()
+    start_date_str = today.strftime('%Y-%m-%d')
+    end_date_str =  today.strftime('%Y-%m-%d')
+    
+    temp_data = {}
+    
+    try:
+        # Get interior temperature data
+        df_interior = get_nantum_data(company, building, 'interior_space_temperature', start_date_str, end_date_str, gran='15min')
+        if not df_interior.empty:
+            temp_data['interior'] = df_interior.mean(axis=1)
+        
+        # Get outdoor temperature data
+        df_outdoor = get_nantum_data(company, building, 'weather_history', start_date_str, end_date_str, gran='15min')
+        if not df_outdoor.empty and 'temperature' in df_outdoor.columns:
+            temp_data['outdoor'] = df_outdoor['temperature']
+        
+        return pd.DataFrame(temp_data)
+    except Exception as e:
+        print(f""Error retrieving temperature data: {str(e)}"")
+        return None
+
+# Set the company and building
+company = 'rudin'
+building = '345_Park'
+
+# Get today's temperature data
+temp_data = get_today_temperature_data(company, building)
+
+if temp_data is not None and not temp_data.empty:
+    # Store data in CSV
+    csv_filename = f""{company}_{building}_temperature_data_{datetime.now().strftime('%Y-%m-%d')}.csv""
+    temp_data.to_csv(csv_filename)
+    print(f""Temperature data for today saved as: {csv_filename}"")
+    
+    # Plot temperature data
+    plt.figure(figsize=(12, 6))
+    for column in temp_data.columns:
+        plt.plot(temp_data.index, temp_data[column], label=f""{column.capitalize()} Temperature"")
+    
+    plt.title(f""Temperature Data for {building} on {datetime.now().strftime('%Y-%m-%d')}"")
+    plt.xlabel(""Time"")
+    plt.ylabel(""Temperature (°F)"")
+    plt.legend()
+    plt.grid(True)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    
+    # Save the plot
+    plot_filename = f""{company}_{building}_temperature_data_{datetime.now().strftime('%Y-%m-%d')}.png""
+    plt.savefig(plot_filename)
+    print(f""Temperature plot saved as: {plot_filename}"")
+    
+    # Display the plot
+    
+else:
+    print(f""Unable to retrieve temperature data for {building}"")",
+ComplianceAgent,What percentage of Nantum startup commands were followed last week?,"## What percentage of Nantum startup commands were followed last week?
+import pandas as pd
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.compliance_env import get_compliance_data, check_valid_dates
+
+# Set up the date range for last week
+end_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+start_date = end_date - timedelta(days=7)
+
+# Convert dates to string format
+start_date_str = start_date.strftime('%Y-%m-%d')
+end_date_str = end_date.strftime('%Y-%m-%d')
+
+# Set company and building
+company = ""rudin""
+building = ""345_Park""
+
+# Check for valid dates
+days_valid = check_valid_dates(start_date_str, end_date_str, company, building)
+valid_days_list = [date.strftime('%Y-%m-%d') for date, has_data in days_valid.items() if has_data]
+
+df = pd.DataFrame(columns=['date','ecm_command_type','complied'])
+# Collect data for each valid day
+for date in valid_days_list:
+    df_temp = get_compliance_data(company, building, date, ecm_command_type='startup')
+    df = pd.concat([df,df_temp])
+
+total_followed = df[(df['ecm_command_type']=='startup') & (df['complied']==True)]['complied'].count()
+total_recommended = df[df['ecm_command_type']=='startup'].shape[0]
+# Calculate the percentage
+if total_recommended > 0:
+    percentage_followed = (total_followed / total_recommended) * 100
+    print(f""Percentage of Nantum startup commands followed last week: {percentage_followed:.2f}%"")
+else:
+    print(""No startup commands were recommended last week."")",
+ComplianceAgent,How many lunch commands were followed last month?,"## How many lunch commands were followed last month?
+import pandas as pd
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.compliance_env import get_compliance_data, check_valid_dates
+
+# Set up the date range for last month
+end_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+start_date = end_date.replace(day=1) - timedelta(days=1)
+start_date = start_date.replace(day=1)
+
+# Convert dates to string format
+start_date_str = start_date.strftime('%Y-%m-%d')
+end_date_str = end_date.strftime('%Y-%m-%d')
+
+# Set company and building
+company = ""rudin""
+building = ""345_Park""
+
+# Check for valid dates
+days_valid = check_valid_dates(start_date_str, end_date_str, company, building)
+valid_days_list = [date.strftime('%Y-%m-%d') for date, has_data in days_valid.items() if has_data]
+
+df = pd.DataFrame(columns=['date','ecm_command_type','complied'])
+# Collect data for each valid day
+for date in valid_days_list:
+    df_temp = get_compliance_data(company, building, date, ecm_command_type=['lunch_rampdown','lunch_rampup'])
+    df = pd.concat([df,df_temp])
+
+lunch_rampdown = df[df['ecm_command_type'] == 'lunch_rampdown']
+lunch_rampup = df[df['ecm_command_type'] == 'lunch_rampup']
+
+total_rampdown_followed = lunch_rampdown[lunch_rampdown['complied'] == True]['complied'].count()
+total_rampup_followed = lunch_rampup[lunch_rampup['complied'] == True]['complied'].count()
+
+print(f""Number of Nantum lunch rampdown commands followed last month: {total_rampdown_followed}"")
+print(f""Number of Nantum lunch rampup commands followed last month: {total_rampup_followed}"")
+print(f""Total number of Nantum lunch commands followed last month: {total_rampdown_followed + total_rampup_followed}"")",
+ComplianceAgent,What's the compliance rate of Nantum command last month?,"## What's the compliance rate of Nantum command last week? Give a breakdown of each command type
+import pandas as pd
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.compliance_env import get_compliance_data, check_valid_dates
+
+# Set up the date range for last week
+end_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+start_date = end_date - timedelta(days=6)
+
+# Convert dates to string format
+start_date_str = start_date.strftime('%Y-%m-%d')
+end_date_str = end_date.strftime('%Y-%m-%d')
+
+# Set company and building
+company = ""rudin""
+building = ""345_Park""
+
+# Check for valid dates
+days_valid = check_valid_dates(start_date_str, end_date_str, company, building)
+valid_days_list = [date.strftime('%Y-%m-%d') for date, has_data in days_valid.items() if has_data]
+
+df = pd.DataFrame(columns=['date', 'ecm_command_type', 'complied'])
+# Collect data for each valid day
+for date in valid_days_list:
+    df_temp = get_compliance_data(company, building, date)
+    df = pd.concat([df, df_temp])
+
+df = df.dropna(subset=['ecm_command_type'])
+
+# Calculate overall compliance rate
+total_followed = df['complied'].sum()
+total_recommended = len(df)
+overall_compliance_rate = (total_followed / total_recommended * 100) if total_recommended > 0 else 0
+
+print(f""Overall compliance rate of Nantum commands last week: {overall_compliance_rate:.2f}%"")
+print(f""Total commands followed: {total_followed}"")
+print(f""Total commands recommended: {total_recommended}"")
+
+# Calculate compliance rate for each ECM command type
+ecm_types = df['ecm_command_type'].unique()
+print(""\nBreakdown by ECM command type:"")
+for ecm_type in ecm_types:
+    ecm_df = df[df['ecm_command_type'] == ecm_type]
+    ecm_followed = ecm_df['complied'].sum()
+    ecm_total = len(ecm_df)
+    ecm_compliance_rate = (ecm_followed / ecm_total * 100) if ecm_total > 0 else 0
+    print(f""{ecm_type}:"")
+    print(f""  Compliance rate: {ecm_compliance_rate:.2f}%"")
+    print(f""  Commands followed: {ecm_followed}"")
+    print(f""  Total commands: {ecm_total}"")
+    print()",
+MVAgent,How much energy Nantum saved for the buidling in the last month?,"## How much energy Nantum saved for the buidling in the last month?
+from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor
+from DATA.CODE_REFERENCES.ENVIRONMENT.m_and_v_env import get_device_ids, get_savings_for_one_day
+
+# Define the period for last month
+today = datetime.today()
+first_day_last_month = (today.replace(day=1) - timedelta(days=1)).replace(day=1)
+last_day_last_month = today.replace(day=1) - timedelta(days=1)
+
+# Set company and building
+company = ""rudin""
+building = ""845_third""
+resource = ""electric_demand""
+
+# Generate a list of dates for last month
+date_list = [first_day_last_month + timedelta(days=x) for x in range((last_day_last_month - first_day_last_month).days + 1)]
+
+# Calculate savings for each day in the last month
+with ThreadPoolExecutor(max_workers=30) as executor:
+    results = list(executor.map(lambda date: get_savings_for_one_day(
+        company, building, resource, date.strftime(""%Y-%m-%d"")), date_list))
+
+# Calculate total energy savings for the month
+total_monthly_savings = sum(day['total'][0]['savings'] for day in results if 'total' in day and day['total'])
+
+print(f""Total energy saved by Nantum for {building} in the last month: {total_monthly_savings:.2f} kWh"")
+
+# Calculate savings for each ECM
+ecm_savings = {
+    'startup': 0,
+    'lunch_ramp': 0,
+    'final_ramp': 0
+}
+
+for day in results:
+    if 'ecm' in day:
+        for ecm in day['ecm']:
+            ecm_savings[ecm['name']] += ecm['savings']
+
+print(""\nBreakdown of savings by Energy Conservation Measure (ECM):"")
+for ecm, savings in ecm_savings.items():
+    print(f""{ecm.capitalize()}: {savings:.2f} kWh"")
+
+# Save results to a CSV file
+import pandas as pd
+
+df = pd.DataFrame(results)
+csv_filename = f""{company}_{building}_energy_savings_{first_day_last_month.strftime('%Y-%m-%d')}_{last_day_last_month.strftime('%Y-%m-%d')}.csv""
+df.to_csv(csv_filename, index=False)
+print(f""\nDetailed results saved to: {csv_filename}"")",
+MVAgent,How much energy Nantum saved for the buidling yesterday by startup ecm?,"## How much energy Nantum saved for the buidling yesterday by startup ecm?
+from datetime import datetime, timedelta
+from DATA.CODE_REFERENCES.ENVIRONMENT.m_and_v_env import get_device_ids, get_savings_for_one_day
+
+# Set company and building
+company = ""rudin""
+building = ""845_third""
+resource = ""electric_demand""
+
+# Calculate yesterday's date
+yesterday = (datetime.now() - timedelta(days=1)).strftime(""%Y-%m-%d"")
+
+# Get savings for yesterday
+savings = get_savings_for_one_day(company, building, resource, yesterday)
+
+# Extract startup ECM savings
+startup_savings = next((ecm for ecm in savings['ecm'] if ecm['name'] == 'startup'), None)
+
+if startup_savings:
+    print(f""Energy saved by Nantum for {building} yesterday ({yesterday}) through startup ECM:"")
+    print(f""{startup_savings['savings']:.2f} {startup_savings['units']}"")
+    print(f""This represents {startup_savings['percentage']:.2f}% of the total usage."")
+else:
+    print(f""No startup ECM savings data available for {yesterday}."")
+
+# Print total savings for context
+total_savings = savings['total'][0]
+print(f""\nTotal energy saved yesterday: {total_savings['savings']:.2f} {total_savings['units']}"")
+print(f""This represents {total_savings['percentage']:.2f}% of the expected usage."")",
+MVAgent,How much energy Nantum Startup saved for the buidling in the last month with daily breakdown?,"## How much energy Nantum Startup saved for the buidling in the last month with daily breakdown?
+## m&v data retrieval can be done once a day, so may use multithread to accelerate the process
+from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor
+from DATA.CODE_REFERENCES.ENVIRONMENT.m_and_v_env import get_device_ids, get_savings_for_one_day
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Set company and building
+company = ""rudin""
+building = ""845_third""
+resource = ""electric_demand""
+
+# Define the period for last month
+today = datetime.today()
+first_day_last_month = (today.replace(day=1) - timedelta(days=1)).replace(day=1)
+last_day_last_month = today.replace(day=1) - timedelta(days=1)
+
+# Generate a list of dates for last month
+date_list = [first_day_last_month + timedelta(days=x) for x in range((last_day_last_month - first_day_last_month).days + 1)]
+
+# Calculate savings for each day in the last month
+with ThreadPoolExecutor(max_workers=30) as executor:
+    results = list(executor.map(lambda date: get_savings_for_one_day(
+        company, building, resource, date.strftime(""%Y-%m-%d"")), date_list))
+
+# Create a DataFrame for daily breakdown
+daily_breakdown = pd.DataFrame(columns=['Date', 'Startup', 'Lunch Ramp', 'Final Ramp', 'Total'])
+
+for day in results:
+    date = day['date']
+    startup = next((ecm['savings'] for ecm in day['ecm'] if ecm['name'] == 'startup'), 0)
+    lunch_ramp = next((ecm['savings'] for ecm in day['ecm'] if ecm['name'] == 'lunch_ramp'), 0)
+    final_ramp = next((ecm['savings'] for ecm in day['ecm'] if ecm['name'] == 'final_ramp'), 0)
+    total = day['total'][0]['savings']
+    daily_breakdown = daily_breakdown.append({
+        'Date': date,
+        'Startup': startup,
+        'Lunch Ramp': lunch_ramp,
+        'Final Ramp': final_ramp,
+        'Total': total
+    }, ignore_index=True)
+
+# Calculate total savings for each ECM
+total_startup_savings = daily_breakdown['Startup'].sum()
+total_lunch_ramp_savings = daily_breakdown['Lunch Ramp'].sum()
+total_final_ramp_savings = daily_breakdown['Final Ramp'].sum()
+total_savings = daily_breakdown['Total'].sum()
+
+# Print results
+print(f""Total energy saved by Nantum for {building} in the last month:"")
+print(f""Startup: {total_startup_savings:.2f} kWh"")
+print(f""Lunch Ramp: {total_lunch_ramp_savings:.2f} kWh"")
+print(f""Final Ramp: {total_final_ramp_savings:.2f} kWh"")
+print(f""Total: {total_savings:.2f} kWh"")
+
+# Create a stacked bar chart
+daily_breakdown['Date'] = pd.to_datetime(daily_breakdown['Date'])
+daily_breakdown = daily_breakdown.set_index('Date')
+
+fig, ax = plt.subplots(figsize=(12, 6))
+daily_breakdown[['Startup', 'Lunch Ramp', 'Final Ramp']].plot(kind='bar', stacked=True, ax=ax)
+ax.set_xlabel('Date')
+ax.set_ylabel('Energy Savings (kWh)')
+ax.set_title(f'Daily Energy Savings Breakdown for {building}')
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Save the plot
+plot_filename = f""{company}_{building}_energy_savings_{first_day_last_month.strftime('%Y-%m-%d')}_{last_day_last_month.strftime('%Y-%m-%d')}.png""
+plt.savefig(plot_filename)
+print(f""\nEnergy savings plot saved as: {plot_filename}"")
+
+# Create a pie chart for total savings
+fig, ax = plt.subplots(figsize=(8, 8))
+sizes = [total_startup_savings, total_lunch_ramp_savings, total_final_ramp_savings]
+labels = ['Startup', 'Lunch Ramp', 'Final Ramp']
+colors = ['#ff9999', '#66b3ff', '#99ff99']
+ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+ax.axis('equal')
+ax.set_title(f'Total Energy Savings Distribution for {building}')
+
+# Save the pie chart
+pie_chart_filename = f""{company}_{building}_energy_savings_distribution_{first_day_last_month.strftime('%Y-%m-%d')}_{last_day_last_month.strftime('%Y-%m-%d')}.png""
+plt.savefig(pie_chart_filename)
+print(f""Energy savings distribution plot saved as: {pie_chart_filename}"")
+
+# Print daily breakdown
+print(""\nDaily Breakdown of Energy Savings:"")
+print(daily_breakdown.to_string())
+
+# Save daily breakdown to CSV
+csv_filename = f""{company}_{building}_daily_energy_savings_{first_day_last_month.strftime('%Y-%m-%d')}_{last_day_last_month.strftime('%Y-%m-%d')}.csv""
+daily_breakdown.to_csv(csv_filename)
+print(f""\nDaily breakdown saved to: {csv_filename}"")",
+MVAgent,What's the energy saving this year so far?,"## What's the energy saving this year so far?
+from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor
+from DATA.CODE_REFERENCES.ENVIRONMENT.m_and_v_env import get_device_ids, get_savings_for_one_day
+
+# Set company and building
+company = ""rudin""
+building = ""845_third""
+resource = ""electric_demand""
+
+# Define the period for this year so far
+today = datetime.today()
+start_of_year = datetime(today.year, 1, 1)
+date_list = [start_of_year + timedelta(days=x) for x in range((today - start_of_year).days + 1)]
+
+# Calculate savings for each day this year
+with ThreadPoolExecutor(max_workers=30) as executor:
+    results = list(executor.map(lambda date: get_savings_for_one_day(
+        company, building, resource, date.strftime(""%Y-%m-%d"")), date_list))
+
+# Calculate total savings for the year
+total_savings = sum(day['total'][0]['savings'] for day in results if 'total' in day and day['total'])
+
+print(f""Total energy savings for {building} this year (from {start_of_year.strftime('%Y-%m-%d')} to {today.strftime('%Y-%m-%d')}): {total_savings:.2f} kWh"")
+
+# Calculate savings for each ECM
+ecm_savings = {
+    'startup': 0,
+    'lunch_ramp': 0,
+    'final_ramp': 0
+}
+
+for day in results:
+    if 'ecm' in day:
+        for ecm in day['ecm']:
+            ecm_savings[ecm['name']] += ecm['savings']
+
+print(""\nBreakdown of savings by Energy Conservation Measure (ECM):"")
+for ecm, savings in ecm_savings.items():
+    print(f""{ecm.capitalize()}: {savings:.2f} kWh"")
+
+# Calculate percentage of total savings for each ECM
+print(""\nPercentage of total savings by ECM:"")
+for ecm, savings in ecm_savings.items():
+    percentage = (savings / total_savings) * 100
+    print(f""{ecm.capitalize()}: {percentage:.2f}%"")
+
+# Save results to a CSV file
+import pandas as pd
+
+df = pd.DataFrame(results)
+csv_filename = f""{company}_{building}_energy_savings_{start_of_year.strftime('%Y-%m-%d')}_{today.strftime('%Y-%m-%d')}.csv""
+df.to_csv(csv_filename, index=False)
+print(f""\nDetailed results saved to: {csv_filename}"")",
+MVAgent,What's the energy saving in this billing period?,"## What's the energy saving in this billing period?
+from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor
+from DATA.CODE_REFERENCES.ENVIRONMENT.m_and_v_env import get_device_ids, get_savings_for_one_day
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_building_metadata
+import pandas as pd
+
+# Set company and building
+company = ""rudin""
+building = ""845_third""
+resource = ""electric_demand""
+
+# Get building metadata to determine billing period
+bldg_meta_data = get_building_metadata(company, building)
+billing_start_day = bldg_meta_data.get('billing_start_day', 1)
+
+# Calculate billing period dates
+today = datetime.today()
+if today.day >= billing_start_day:
+    start_date = today.replace(day=billing_start_day)
+else:
+    last_month = today.replace(day=1) - timedelta(days=1)
+    start_date = last_month.replace(day=billing_start_day)
+
+end_date = today
+
+# Generate a list of dates for the billing period
+date_list = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+
+# Calculate savings for each day in the billing period
+with ThreadPoolExecutor(max_workers=30) as executor:
+    results = list(executor.map(lambda date: get_savings_for_one_day(
+        company, building, resource, date.strftime(""%Y-%m-%d"")), date_list))
+
+# Calculate total savings for the billing period
+total_savings = sum(day['total'][0]['savings'] for day in results if 'total' in day and day['total'])
+
+print(f""Total energy savings for {building} in the current billing period ({start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}): {total_savings:.2f} kWh"")
+
+# Calculate savings for each ECM
+ecm_savings = {
+    'startup': 0,
+    'lunch_ramp': 0,
+    'final_ramp': 0
+}
+
+for day in results:
+    if 'ecm' in day:
+        for ecm in day['ecm']:
+            ecm_savings[ecm['name']] += ecm['savings']
+
+print(""\nBreakdown of savings by Energy Conservation Measure (ECM):"")
+for ecm, savings in ecm_savings.items():
+    print(f""{ecm.capitalize()}: {savings:.2f} kWh"")
+
+# Calculate percentage of total savings for each ECM
+print(""\nPercentage of total savings by ECM:"")
+for ecm, savings in ecm_savings.items():
+    percentage = (savings / total_savings) * 100
+    print(f""{ecm.capitalize()}: {percentage:.2f}%"")
+
+# Save results to a CSV file
+df = pd.DataFrame(results)
+csv_filename = f""{company}_{building}_energy_savings_{start_date.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}.csv""
+df.to_csv(csv_filename, index=False)
+print(f""\nDetailed results saved to: {csv_filename}"")",
+MVAgent,What's the energy saving in the last billing period?,"## What's the energy saving in the last billing period?
+from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor
+from DATA.CODE_REFERENCES.ENVIRONMENT.m_and_v_env import get_device_ids, get_savings_for_one_day
+from DATA.CODE_REFERENCES.ENVIRONMENT.an_common_env import get_building_metadata
+import pandas as pd
+
+# Set company and building
+company = ""rudin""
+building = ""845_third""
+resource = ""electric_demand""
+
+# Get building metadata to determine billing period
+bldg_meta_data = get_building_metadata(company, building)
+billing_start_day = bldg_meta_data.get('billing_start_day', 1)
+
+# Calculate last billing period dates
+today = datetime.today()
+if today.day >= billing_start_day:
+    end_date = today.replace(day=billing_start_day) - timedelta(days=1)
+    start_date = (end_date.replace(day=1) - timedelta(days=1)).replace(day=billing_start_day)
+else:
+    end_date = (today.replace(day=1) - timedelta(days=1)).replace(day=billing_start_day) - timedelta(days=1)
+    start_date = (end_date.replace(day=1) - timedelta(days=1)).replace(day=billing_start_day)
+
+# Generate a list of dates for the last billing period
+date_list = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+
+# Calculate savings for each day in the last billing period
+with ThreadPoolExecutor(max_workers=30) as executor:
+    results = list(executor.map(lambda date: get_savings_for_one_day(
+        company, building, resource, date.strftime(""%Y-%m-%d"")), date_list))
+
+# Calculate total savings for the billing period
+total_savings = sum(day['total'][0]['savings'] for day in results if 'total' in day and day['total'])
+
+print(f""Total energy savings for {building} in the last billing period ({start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}): {total_savings:.2f} kWh"")
+
+# Calculate savings for each ECM
+ecm_savings = {
+    'startup': 0,
+    'lunch_ramp': 0,
+    'final_ramp': 0
+}
+
+for day in results:
+    if 'ecm' in day:
+        for ecm in day['ecm']:
+            ecm_savings[ecm['name']] += ecm['savings']
+
+print(""\nBreakdown of savings by Energy Conservation Measure (ECM):"")
+for ecm, savings in ecm_savings.items():
+    print(f""{ecm.capitalize()}: {savings:.2f} kWh"")
+
+# Calculate percentage of total savings for each ECM
+print(""\nPercentage of total savings by ECM:"")
+for ecm, savings in ecm_savings.items():
+    percentage = (savings / total_savings) * 100
+    print(f""{ecm.capitalize()}: {percentage:.2f}%"")
+
+# Save results to a CSV file
+df = pd.DataFrame(results)
+csv_filename = f""{company}_{building}_energy_savings_{start_date.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}.csv""
+df.to_csv(csv_filename, index=False)
+print(f""\nDetailed results saved to: {csv_filename}"")",

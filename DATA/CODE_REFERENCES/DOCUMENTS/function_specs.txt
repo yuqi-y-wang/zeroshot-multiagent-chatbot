@@ -1,0 +1,154 @@
+Additional context for coding:
+What is the measure for electricity consumption? kWh
+What is the measure for steam consumption?	mlbs
+What is the measure for gas consumption?	therm
+What is the measure for electricity demand?	kW
+What is the measure for steam demand?	mlbs/h
+What is the measure for gas demand?	therm/h
+How to convert electricity from kWh to kBTU?	1kWh is 3.412kBTU
+How to convert steam from Mlbs to kBTU?	1mlbs is 1194kBTU
+How to convert gas from them to kBTU?	1 them is 99.9761kBTU
+What is the estimated ghg intensity per kWh of electricity?	1 kWh is 0.289 kg CO2 equivalent
+What is the estimated ghg intensity per mlbs of steam?	1 mlbs is 53.646 kg CO2 equivalent
+
+python function:
+get_nantum_data(company, building, resource, start_date, end_date, gran='60min', floor=None, total=None, rename=False)
+    """
+    Retrieves interpolated data for a specified resource within a given time range and granularity.
+
+    Args:
+        company (str): Identifier for the company.
+        building (str): Identifier for the building.
+        resource (str): Type of resource data to retrieve.
+        start_date (str): Start date of the data retrieval period. Data of this date is included.
+        end_date (str): End date of the data retrieval period. Data of this date is included.
+        gran (str, optional): Time granularity of the data. Defaults to '60min'. Valid choices include '15min', '30min', and '60min'.
+        floor (str, optional): Specific floor to filter data. Defaults to None.
+        total (str, optional): If set to 'only', only total aggregated data is retrieved. Defaults to None.
+        rename (bool, optional): If True, renames columns to more descriptive names. Defaults to False.
+
+    Returns:
+        DataFrame: A DataFrame containing the requested data.
+        demand is instantaneous value of resource, the summation of demand at '60min' granularity is consumption, the summation of demand at '15min' granularity divided by 4 is consumption, etc.
+        Therefore, set gran='60min' and sum all to get the correct consumption.
+        If total is set to 'only', the total resource DataFrame will be returned. If not, dataFrame with multiple resource sensors will be returned.
+    """
+
+python function:
+get_daily_water_consumption(company, building, start_date, end_date):
+    Retrieves and aggregates daily water consumption data for a specified resource within a given time range.
+    Returns:
+        DataFrame: A DataFrame containing the daily water consumption with index of date.
+
+python function:
+def get_one_day_hourly_energy_consumption(company, building, resource, start_date, end_date)
+    Retrieves hourly energy consumption data for a specified resource within a given time range.
+    Returns:
+        DataFrame or None: A DataFrame containing hourly energy demand data for the specified resource and time range.
+                           Returns None if no data is available or if an error occurs during retrieval.
+
+python function:
+def get_daily_energy_consumption(company, building, resource, start_date, end_date)
+    Retrieves and aggregates daily energy consumption data for a specified resource within a given time range.
+    Returns:
+        DataFrame: A DataFrame containing the daily sum of the requested energy consumption data. Rows are dates, and the column is resource consumption for that date.
+
+python function: 
+def get_total_energy_consumption(company, building, resource, start_date, end_date)
+    Calculates the total energy consumption for a specified resource within a given time range.
+    Returns:
+        float: The total sum of the energy consumption data for the specified period.
+
+python function:
+calc_daily_peak_demand(company, building, start_date, end_date)
+    """
+    Calculate the peak electricity demand for a specified building over a given period at time granularity of one day.
+    It's different than max value of electric demand so always call this function for peak_demand calculation.
+
+    Args:
+        company (str): Identifier for the company.
+        building (str): Identifier for the building.
+        start_date (str): Start date of the data retrieval period. Data of this date is included.
+        end_date (str): End date of the data retrieval period. Data of this date is included.
+
+    Returns:
+        DataFrame: A DataFrame containing the peak demand for each day.
+    """
+
+python function: 
+calc_ghg_emission(company, building, start_date, end_date, gran='60min',
+                      elec_ghg_factor=None, steam_ghg_factor=None, gas_ghg_factor=None)
+    """
+    Calculate the greenhouse gas (GHG) emissions for electricity, steam, and gas demands.
+
+    Args:
+        company (str): Identifier for the company.
+        building (str): Identifier for the building.
+        start_date (str): Start date of the data retrieval period.
+        end_date (str): End date of the data retrieval period.
+        gran (str, optional): Granularity of the data. Defaults to '60min'.
+        elec_ghg_factor (float, optional): GHG emission factor for electricity. Defaults to 3.412 * 0.08469 if None input.
+        steam_ghg_factor (float, optional): GHG emission factor for steam. Defaults to 1194 * 0.04493 if None input.
+        gas_ghg_factor (float, optional): GHG emission factor for gas. Defaults to 5.3 if None input.
+
+    Returns:
+        DataFrame: A DataFrame containing the calculated GHG emissions for each energy type and the total emissions. 
+        Columns of the DataFrame are ['elec_ghg_kgCO2', 'steam_ghg_kgCO2', 'total_ghg_kgCO2'], the total_ghg_kgCO2 is the summation of elec_ghg_kgCO2 and steam_ghg_kgCO2. You cant use it in the pie chart breakdown plot.
+        Rows are the timestamps.
+    """
+
+python function:
+get_savings_for_one_day(company, building, resource, date)
+    """
+    Retrieves the estimated savings for a given company and building on a specified date.
+
+    Args:
+    company (str): The name of the company owning the building.
+    building (str): The name of the building for which savings are calculated.
+    resource (str): The type of resource for which savings are calculated (e.g., electricity, water).
+    date (str): The date for which the savings are calculated in YYYY-MM-DD format.
+
+    Returns:
+    dict: A dictionary to record the savings from each ecm and total savings. Example:
+        {'ecm': [{'name': 'startup', 'savings': 2467.2860600606696, 'percentage': 2.6771591150264404, 'units': 'kWh', 'utility': 'electric'}, {'name': 'lunch_ramp', 'savings': 98.79790336981338, 'percentage': 0.10720188138439588, 'units': 'kWh', 'utility': 'electric'}, {'name': 'final_ramp', 'savings': 886.1218896998636, 'percentage': 0.9614974657523537, 'units': 'kWh', 'utility': 'electric'}], 'total': [{'observed': 88708.4, 'expected': 92160.60585313033, 'percentage': 3.745858462163176, 'savings': 3452.2058531303337, 'units': 'kWh', 'utility': 'electric'}], 'date': '2024-05-30'}
+
+    Raises:
+    HTTPError: If the requests to the API endpoints fail.
+    ValueError: If the response from the inference endpoint cannot be evaluated.
+    """
+
+python function:
+get_compliance_data(company, building, date, ecm_command_type='all'):
+    """
+    Fetches compliance data for a specified company and building on a given date.
+
+    Args:
+        company (str): The name of the company owning the building.
+        building (str): The name of the building for which compliance data is being fetched.
+        date (str): The date for which the compliance data is requested in YYYY-MM-DD format.
+        ecm_command_type (str, optional): The type of ecm command to fetch compliance data for. Defaults to 'all'. Other optionals include "startup", "shutdown", "lunch_rampdown", "lunch_rampup", "final_rampdown", and "shutdown".
+
+    Returns:
+        Response: A DataFrame with columns=['date', 'ecm_command_type', 'complied'], rows are the dates, ecm_command_type, and complied (True or False).
+
+    Raises:
+        HTTPError: If the request to the API endpoint fails.
+    """
+
+python function:
+check_valid_dates(start_date, end_date, company, building)
+    """
+    Validates the dates for compliance checks within a specified range for a given company and building.
+
+    Args:
+        start_date (str): The start date of the period for which to validate dates in YYYY-MM-DD format.
+        end_date (str): The end date of the period for which to validate dates in YYYY-MM-DD format.
+        company (str): The name of the company owning the building.
+        building (str): The identifier for the building.
+
+    Returns:
+        dict: A dictionary containing the validation results and types of days within the specified date range.
+
+    Raises:
+        ValueError: If the start_date or end_date are not in the correct format or logically inconsistent (e.g., start_date is later than end_date).
+    """
